@@ -14,6 +14,21 @@ module FpRoundingErrors
 end
 
 module FpRoundingErrors
+  class Type
+    def initialize(type_class, convertor)
+      @type_class = type_class
+      @convertor = convertor
+    end
+
+    def to_s
+      @type_class.to_s
+    end
+
+    def to_type(value)
+      @convertor.call(value)
+    end
+  end
+
   class Result
     attr_reader :name, :values, :error
 

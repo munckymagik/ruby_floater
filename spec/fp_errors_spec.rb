@@ -23,6 +23,21 @@ describe FpRoundingErrors do
   end
 end
 
+describe FpRoundingErrors::Type do
+  describe '#to_s' do
+    it 'returns the name of the embedded type\'s class' do
+      subject = described_class.new(Float, nil)
+      expect(subject.to_s).to eq('Float')
+    end
+  end
+
+  it 'knows how to convert a string value to the embedded type' do
+    subject = described_class.new(Float, ->(x) { x.to_f })
+    expect(subject.to_type('9.99')).to be_a(Float)
+    expect(subject.to_type('9.99')).to eq(9.99)
+  end
+end
+
 describe FpRoundingErrors::TestRunner do
   describe '#run_all' do
     it 'returns a collection containing all of the test results' do
