@@ -14,6 +14,6 @@ describe 'The FpTest Application' do
   it 'says hello' do
     get '/'
     expect(last_response).to be_ok
-    expect(last_response.body).to eq('Hello World')
+    expect(last_response.body).to eq('Hello Erb')
   end
 end
