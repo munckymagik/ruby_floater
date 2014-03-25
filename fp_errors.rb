@@ -48,7 +48,7 @@ module FpRoundingErrors
     def run_all
       @types.map do |type|
         results = @tests.map do |test|
-          run(test, type)
+          self.class.run(test, type)
         end
 
         [type, results]

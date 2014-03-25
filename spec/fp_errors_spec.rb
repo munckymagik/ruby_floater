@@ -45,7 +45,7 @@ describe FpRoundingErrors::TestRunner do
         [:not_a_real_test1, :not_a_real_test2],
         [:not_a_real_type1, :not_a_real_type2])
 
-      allow(subject).to receive(:run) do |test, type|
+      allow(described_class).to receive(:run) do |test, type|
         test
       end
 
@@ -66,5 +66,21 @@ describe FpRoundingErrors::TestRunner do
       expect(test).to receive(:apply).with(type).and_return(result)
       expect(described_class.run(test, type)).to eq(result)
     end
+  end
+
+  it 'runs a set of tests with a set of types' do
+    test = double()
+    allow(test).to receive(:apply) do |type|
+      FpRoundingErrors.add_a_tenth_ten_times(type.method(:to_type))
+    end
+
+    type = FpRoundingErrors::Type.new(Float, ->(x) { x.to_f })
+
+    subject = described_class.new([test], [type])
+
+    results = subject.run_all
+
+    expect(results.length).to eq(1)
+    expect(results[0][0]).to be(type)
   end
 end
