@@ -27,6 +27,10 @@ module FpRoundingErrors
     def to_type(value)
       @convertor.call(value)
     end
+
+    def to_proc
+      self.method(:to_type)
+    end
   end
 
   class Result

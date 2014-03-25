@@ -31,6 +31,15 @@ describe FpRoundingErrors::Type do
     end
   end
 
+  describe '#to_proc' do
+    it 'returns a #to_type method object' do
+      subject = described_class.new(Float, ->(x) { x.to_f })
+      callable = subject.to_proc
+      expect(callable).to be_a(Method)
+      expect(callable.('7.0')).to eq(7.0)
+    end
+  end
+
   it 'knows how to convert a string value to the embedded type' do
     subject = described_class.new(Float, ->(x) { x.to_f })
     expect(subject.to_type('9.99')).to be_a(Float)
@@ -71,7 +80,7 @@ describe FpRoundingErrors::TestRunner do
   it 'runs a set of tests with a set of types' do
     test = double()
     allow(test).to receive(:apply) do |type|
-      FpRoundingErrors.add_a_tenth_ten_times(type.method(:to_type))
+      FpRoundingErrors.add_a_tenth_ten_times(type.to_proc)
     end
 
     type = FpRoundingErrors::Type.new(Float, ->(x) { x.to_f })
