@@ -1,6 +1,22 @@
+require 'bigdecimal'
+
 # See http://en.wikipedia.org/wiki/Floating_point#Accuracy_problems
 
 module FpRoundingErrors
+  def self.run_tests
+    test_runner = TestRunner.new(
+      # Tests
+      [Test.new(self.method(:add_a_tenth_ten_times))],
+
+      # Types
+      [Type.new(Float, ->(x) { x.to_f }),
+       Type.new(Rational, ->(x) { x.to_r }),
+       Type.new(BigDecimal, ->(x) { BigDecimal(x) })]
+    )
+
+    test_runner.run_all
+  end
+
   def self.add_a_tenth_ten_times(t)
     a = t.("0.0")
     b = t.("1.0")
