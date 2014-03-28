@@ -18,17 +18,22 @@
 
         <table class="table table-striped">
           <thead>
-            <th>heading #1</th>
-            <th>heading #2</th>
+            <th>Type</th>
+            <th>Test</th>
+            <th>Values</th>
+            <th>Error</th>
           </thead>
+
+          <% @results.each do |row| %>
           <tr>
-            <td>data #1</td>
-            <td>data #2</td>
+            <td><%= row[0] %></td>
+            <% row[1].each do |test_result| %>
+            <td><%= test_result.name %></td>
+            <td><%= test_result.values %></td>
+            <td><%= test_result.error %></td>
+            <% end %>
           </tr>
-          <tr>
-            <td>data #1</td>
-            <td>data #2</td>
-          </tr>
+          <% end %>
         </table>
       </div>
     </div>
