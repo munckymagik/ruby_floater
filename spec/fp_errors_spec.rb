@@ -47,6 +47,28 @@ describe FpRoundingErrors::Type do
   end
 end
 
+describe FpRoundingErrors::Test do
+  describe "#run" do
+    it "runs the encapsulated test function" do
+      was_run = false
+      subject = described_class.new(->(not_used) { was_run = true })
+
+      expect(was_run).to be_false
+      subject.run(double(to_proc: ->() {}))
+      expect(was_run).to be_true
+    end
+
+    it "passes the type conversion proc as an argument to the test function" do
+      subject = described_class.new(->(type_proc) { type_proc.call })
+      type = double(to_proc: ->() { 'I was called' })
+
+      result = subject.run(type)
+
+      expect(result).to eq('I was called')
+    end
+  end
+end
+
 describe FpRoundingErrors::TestRunner do
   describe '#run_all' do
     it 'returns a collection containing all of the test results' do
@@ -68,21 +90,17 @@ describe FpRoundingErrors::TestRunner do
   end
 
   describe '.run' do
-    it 'returns the result of applying the given test with the given type' do
+    it 'returns the result of running the given test with the given type' do
       test = double()
       type = double()
       result = double()
-      expect(test).to receive(:apply).with(type).and_return(result)
+      expect(test).to receive(:run).with(type).and_return(result)
       expect(described_class.run(test, type)).to eq(result)
     end
   end
 
   it 'runs a set of tests with a set of types' do
-    test = double()
-    allow(test).to receive(:apply) do |type|
-      FpRoundingErrors.add_a_tenth_ten_times(type.to_proc)
-    end
-
+    test = FpRoundingErrors::Test.new(FpRoundingErrors.method(:add_a_tenth_ten_times))
     type = FpRoundingErrors::Type.new(Float, ->(x) { x.to_f })
 
     subject = described_class.new([test], [type])

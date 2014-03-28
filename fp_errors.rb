@@ -33,6 +33,16 @@ module FpRoundingErrors
     end
   end
 
+  class Test
+    def initialize(test_proc)
+      @test_proc = test_proc
+    end
+
+    def run(type)
+      @test_proc.call(type.to_proc)
+    end
+  end
+
   class Result
     attr_reader :name, :values, :error
 
@@ -60,7 +70,7 @@ module FpRoundingErrors
     end
 
     def self.run(test, type)
-      test.apply(type)
+      test.run(type)
     end
   end
 end
