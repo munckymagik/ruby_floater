@@ -25,6 +25,18 @@
       <div class="col-md-12">
         <h1>Floating Point Types in Ruby</h1>
 
+        <p>A series of accuracy tests that demonstrate the problems with Floating
+          point values. The same examples are run with each of Ruby's Float,
+          Rational and BigDecimal types to compare their behaviour.</p>
+        <p>Issues to note:</p>
+        <ul>
+          <li>Just because the Rational and BigDecimal types appear to pass a test
+            when fed numbers that make Float fail, doesn't prove there aren't different
+            numbers that would make these two types fail.</li>
+          <li>The 'Difference' values may not be accurate.</li>
+          <li>The floating point values may be being rounded.</li>
+        </ul>
+
 
         <% @results.each do |test, test_results| %>
 
