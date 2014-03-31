@@ -6,7 +6,7 @@ module FpRoundingErrors
   def self.run_tests
     test_runner = TestRunner.new(
       # Tests
-      [Test.new(self.method(:add_a_tenth_ten_times))],
+      [Test.new('Add a tenth ten times', self.method(:add_a_tenth_ten_times))],
 
       # Types
       [Type.new(Float, ->(x) { x.to_f }),
@@ -18,14 +18,18 @@ module FpRoundingErrors
   end
 
   def self.add_a_tenth_ten_times(t)
-    a = t.("0.0")
-    b = t.("1.0")
+    start = t.("0.0")
+    expected = t.("1.0")
 
-    c = 10.times.reduce(a) { |accum, _|
+    result = 10.times.reduce(start) { |accum, _|
       accum + t.("0.1")
     }
 
-    Result.new(__method__, [c], c - b)
+    [(result == expected) ? :pass : :fail, {
+      expected: expected.to_s,
+      got: result.to_s,
+      delta: (expected - result).to_s
+    }]
   end
 end
 
@@ -50,22 +54,29 @@ module FpRoundingErrors
   end
 
   class Test
-    def initialize(test_proc)
+    def initialize(name, test_proc)
       @test_proc = test_proc
+      @name = name
     end
 
     def run(type)
-      @test_proc.call(type.to_proc)
+      result, info = @test_proc.call(type.to_proc)
+      Result.new(self, type, result, info)
+    end
+
+    def to_s
+      @name
     end
   end
 
   class Result
-    attr_reader :name, :values, :error
+    attr_reader :test, :type, :result, :info
 
-    def initialize(name, values, error)
-      @name = name
-      @values = values
-      @error = error
+    def initialize(test, type, result, info)
+      @test = test
+      @type = type
+      @result = result
+      @info = info
     end
   end
 
@@ -76,12 +87,12 @@ module FpRoundingErrors
     end
 
     def run_all
-      @types.map do |type|
-        results = @tests.map do |test|
+      @tests.map do |test|
+        results = @types.map do |type|
           self.class.run(test, type)
         end
 
-        [type, results]
+        [test, results]
       end
     end
 

@@ -16,25 +16,28 @@
       <div class="col-md-12">
         <h1>Floating Point Types in Ruby</h1>
 
-        <table class="table table-striped">
-          <thead>
-            <th>Type</th>
-            <th>Test</th>
-            <th>Values</th>
-            <th>Error</th>
-          </thead>
 
-          <% @results.each do |row| %>
-          <tr>
-            <td><%= row[0] %></td>
-            <% row[1].each do |test_result| %>
-            <td><%= test_result.name %></td>
-            <td><%= test_result.values %></td>
-            <td><%= test_result.error %></td>
+        <% @results.each do |test, test_results| %>
+
+        <h2><%= test %></h2>
+
+          <table class="table table-striped">
+            <thead>
+              <th>Type</th>
+              <th>Result</th>
+              <th>Info</th>
+            </thead>
+            <% test_results.each do |test_result| %>
+            <tr>
+              <td><%= test_result.type %></td>
+              <td><%= test_result.result %></td>
+              <td><%= test_result.info %></td>
+            </tr>
             <% end %>
-          </tr>
-          <% end %>
-        </table>
+
+          </table>
+
+        <% end %>
       </div>
     </div>
   </div>
