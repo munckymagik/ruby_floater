@@ -1,27 +1,5 @@
 require_relative '../fp_errors'
 
-describe FpRoundingErrors do
-  describe ".add_a_tenth_ten_times" do
-    it 'calls the type convertor to convert operands from strings' do
-      called = false
-      convertor = ->(x) {
-        called = true
-        expect(x).to be_a(String)
-        x.to_f
-      }
-
-      described_class.add_a_tenth_ten_times(convertor)
-      expect(called).to be_true
-    end
-
-    it 'returns a pass/fail result and some info' do
-      result, info = described_class.add_a_tenth_ten_times(->(x) { x.to_f })
-      expect(result).to be_a(Symbol)
-      expect(info).to be_a(Hash)
-    end
-  end
-end
-
 describe FpRoundingErrors::Type do
   describe '#to_s' do
     it 'returns the name of the embedded type\'s class' do
@@ -113,7 +91,7 @@ describe FpRoundingErrors::TestRunner do
 
   it 'runs a set of tests with a set of types' do
     test = FpRoundingErrors::Test.new(
-      'add_a_tenth_ten_times', FpRoundingErrors.method(:add_a_tenth_ten_times))
+      'add_a_tenth_ten_times', FpRoundingErrors::Tests.method(:add_a_tenth_ten_times))
     type = FpRoundingErrors::Type.new(Float, ->(x) { x.to_f })
 
     subject = described_class.new([test], [type])
